@@ -16,3 +16,6 @@ BugReports: https://github.com/krlmlr/data/issues
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
+Imports: 
+    lifecycle
+RdMacros: lifecycle
