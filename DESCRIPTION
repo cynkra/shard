@@ -19,3 +19,4 @@ Roxygen: list(markdown = TRUE)
 Imports: 
     lifecycle
 RdMacros: lifecycle
+RoxygenNote: 7.1.0
