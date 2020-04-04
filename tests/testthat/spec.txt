@@ -1,0 +1,27 @@
+> iris %>% build_shard_spec("iris", "csv") %>% expand_first_nested()
+# A tibble: 1 x 2
+  path  data$path $data$Sepal.Length
+  <chr> <chr>                  <dbl>
+1 iris/ iris.csv                 5.1
+
+> iris %>% build_shard_spec("iris", "csv", shard_by = Species) %>%
++   expand_first_nested()
+# A tibble: 1 x 2
+  path  data$path               $data$Sepal.Length
+  <chr> <chr>                                <dbl>
+1 iris/ iris-Species=setosa.csv                5.1
+
+> iris %>% build_shard_spec("iris", "csv", shard_by = c(Species, Petal.Width)) %>%
++   expand_first_nested()
+# A tibble: 1 x 2
+  path  data$path       $data$path               $$data$Sepal.Length
+  <chr> <chr>           <chr>                                  <dbl>
+1 iris/ Species=setosa/ iris-Petal.Width=0.2.csv                 5.1
+
+> iris %>% slice(0) %>% build_shard_spec("iris", "csv", shard_by = c(Species,
++   Petal.Width)) %>% expand_first_nested()
+# A tibble: 1 x 2
+  path  data$path   $data$path              $$data$Sepal.Length
+  <chr> <chr>       <chr>                                 <dbl>
+1 iris/ Species=NA/ iris-Petal.Width=NA.csv                  NA
+
