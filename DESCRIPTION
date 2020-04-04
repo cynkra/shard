@@ -17,7 +17,8 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 Imports: 
-    lifecycle
+    lifecycle,
+    tibble (>= 3.0.0)
 RdMacros: lifecycle
 RoxygenNote: 7.1.0
 Suggests: 

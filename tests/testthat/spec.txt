@@ -1,27 +1,37 @@
-> iris %>% build_shard_spec("iris", "csv") %>% expand_first_nested()
+> iris %>% build_shard_spec("iris", "csv")
 # A tibble: 1 x 2
-  path  data$path $data$Sepal.Length
-  <chr> <chr>                  <dbl>
-1 iris/ iris.csv                 5.1
+  path          data              
+  <chr>         <list>            
+1 iris/iris.csv <tibble [150 x 5]>
 
-> iris %>% build_shard_spec("iris", "csv", shard_by = Species) %>%
-+   expand_first_nested()
-# A tibble: 1 x 2
-  path  data$path               $data$Sepal.Length
-  <chr> <chr>                                <dbl>
-1 iris/ iris-Species=setosa.csv                5.1
+> iris %>% build_shard_spec("iris", "csv", shard_by = Species)
+# A tibble: 3 x 2
+  path                             data             
+  <chr>                            <list>           
+1 iris/iris-Species=setosa.csv     <tibble [50 x 4]>
+2 iris/iris-Species=versicolor.csv <tibble [50 x 4]>
+3 iris/iris-Species=virginica.csv  <tibble [50 x 4]>
 
-> iris %>% build_shard_spec("iris", "csv", shard_by = c(Species, Petal.Width)) %>%
-+   expand_first_nested()
-# A tibble: 1 x 2
-  path  data$path       $data$path               $$data$Sepal.Length
-  <chr> <chr>           <chr>                                  <dbl>
-1 iris/ Species=setosa/ iris-Petal.Width=0.2.csv                 5.1
+> iris %>% build_shard_spec("iris", "csv", shard_by = c(Species, Petal.Width))
+# A tibble: 27 x 2
+   path                                             data             
+   <chr>                                            <list>           
+ 1 iris/Species=setosa/iris-Petal.Width=0.1.csv     <tibble [5 x 3]> 
+ 2 iris/Species=setosa/iris-Petal.Width=0.2.csv     <tibble [29 x 3]>
+ 3 iris/Species=setosa/iris-Petal.Width=0.3.csv     <tibble [7 x 3]> 
+ 4 iris/Species=setosa/iris-Petal.Width=0.4.csv     <tibble [7 x 3]> 
+ 5 iris/Species=setosa/iris-Petal.Width=0.5.csv     <tibble [1 x 3]> 
+ 6 iris/Species=setosa/iris-Petal.Width=0.6.csv     <tibble [1 x 3]> 
+ 7 iris/Species=versicolor/iris-Petal.Width=1.csv   <tibble [7 x 3]> 
+ 8 iris/Species=versicolor/iris-Petal.Width=1.1.csv <tibble [3 x 3]> 
+ 9 iris/Species=versicolor/iris-Petal.Width=1.2.csv <tibble [5 x 3]> 
+10 iris/Species=versicolor/iris-Petal.Width=1.3.csv <tibble [13 x 3]>
+# ... with 17 more rows
 
 > iris %>% slice(0) %>% build_shard_spec("iris", "csv", shard_by = c(Species,
-+   Petal.Width)) %>% expand_first_nested()
++   Petal.Width))
 # A tibble: 1 x 2
-  path  data$path   $data$path              $$data$Sepal.Length
-  <chr> <chr>       <chr>                                 <dbl>
-1 iris/ Species=NA/ iris-Petal.Width=NA.csv                  NA
+  path                                data            
+  <chr>                               <list>          
+1 iris/Species=/iris-Petal.Width=.csv <tibble [1 x 3]>
 

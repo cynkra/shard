@@ -1,11 +1,9 @@
 #' @export
 build_shard_spec <- function(x, name, extension, ...,
-                             shard_by = NULL, container = NULL,
-                             delimiter = "-") {
+                             shard_by = NULL, delimiter = "-") {
   ellipsis::check_dots_empty()
 
   shard_by <- tidyselect::eval_select(enquo(shard_by), x)
-  container <- tidyselect::eval_select(enquo(container), x)
 
   # Prepend artificial row full of NAs to avoid corner cases
   if (nrow(x) == 0) {
@@ -14,46 +12,42 @@ build_shard_spec <- function(x, name, extension, ...,
     x <- x[c(NA, seq_len(nrow(x))), ]
   }
 
+  new_shard_quo <- function(shard, last) {
+    if (last) {
+      quo(paste0(!!name, delimiter, !!shard, "=", na_as_empty(!!sym(shard))))
+    } else {
+      quo(paste0(!!shard, "=", na_as_empty(!!sym(shard))))
+    }
+  }
+
+  chars <- map2(
+    set_names(names(shard_by)),
+    seq_along(shard_by) == length(shard_by),
+    new_shard_quo
+  )
+
   nested <-
     x %>%
     nest(data = -!!shard_by) %>%
-    select(!!!syms(names(shard_by)), data)
+    select(!!!syms(names(shard_by)), data) %>%
+    arrange(!!!syms(names(shard_by))) %>%
+    mutate(!!!chars)
 
-  nested_spec <- nested_build_shard_spec(
-    nested, name, extension,
-    container = container,
-    delimiter = delimiter
-  )
+  if (length(nested) <= 1) {
+    flat <- tibble::tibble(path = !!name, nested)
+  } else {
+    all_chars <- quo(paste(!!!syms(names(shard_by)), sep = "/"))
+    flat <-
+      nested %>%
+      unite(path, !!!syms(names(shard_by)), sep = "/")
+  }
 
-  tibble(
-    path = paste0(name, "/"),
-    data = list(nested_spec)
-  )
+  flat %>%
+    mutate(path = paste0(name, "/", path, ".", extension))
 }
 
-nested_build_shard_spec <- function(nested, name, extension, container, delimiter) {
-  if (length(nested) - 1 <= length(container)) {
-    tibble::tibble(
-      path = paste0(name, ".", extension),
-      nested
-    )
-  } else if (length(nested) - 2 <= length(container)) {
-    first_name <- names(nested)[[1]]
-    nested %>%
-      transmute(
-        path = paste0(name, delimiter, first_name, "=", !!sym(first_name), ".", extension),
-        data
-      )
-  } else {
-    sub_nested <-
-      nested %>%
-      nest(data = -1)
-
-    first_name <- names(sub_nested)[[1]]
-    sub_nested %>%
-      transmute(
-        path = paste0(first_name, "=", !!sym(first_name), "/"),
-        data = purrr::map(data, ~nested_build_shard_spec(.x, name, extension, container, delimiter))
-      )
-  }
+na_as_empty <- function(x) {
+  x <- as.character(x)
+  x[is.na(x)] <- ""
+  x
 }
