@@ -2,7 +2,7 @@
 
 export(shard_bind)
 export(shard_split)
-export(write_csv_sharded)
+export(shard_write_csv)
 import(dplyr)
 import(rlang)
 import(tibble)
