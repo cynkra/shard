@@ -10,6 +10,9 @@ shard_split <- function(x, name, extension, ...,
     # FIXME: Alternative check, more convoluted:
     # all(purrr::map_lgl(x[1, ], is.na))
     x <- x[c(NA, seq_len(nrow(x))), ]
+    extra_row <- TRUE
+  } else {
+    extra_row <- FALSE
   }
 
   new_shard_quo <- function(shard, last) {
@@ -40,6 +43,10 @@ shard_split <- function(x, name, extension, ...,
     flat <-
       nested %>%
       unite(path, !!!syms(names(shard_by)), sep = "/")
+  }
+
+  if (extra_row) {
+    flat$data[[1]] <- flat$data[[1]][0, ]
   }
 
   flat %>%
