@@ -1,10 +1,10 @@
-> iris %>% build_shard_spec("iris", "csv")
+> iris %>% shard_split("iris", "csv")
 # A tibble: 1 x 2
   path          data              
   <chr>         <list>            
 1 iris/iris.csv <tibble [150 x 5]>
 
-> iris %>% build_shard_spec("iris", "csv", shard_by = Species)
+> iris %>% shard_split("iris", "csv", shard_by = Species)
 # A tibble: 3 x 2
   path                             data             
   <chr>                            <list>           
@@ -12,7 +12,7 @@
 2 iris/iris-Species=versicolor.csv <tibble [50 x 4]>
 3 iris/iris-Species=virginica.csv  <tibble [50 x 4]>
 
-> iris %>% build_shard_spec("iris", "csv", shard_by = c(Species, Petal.Width))
+> iris %>% shard_split("iris", "csv", shard_by = c(Species, Petal.Width))
 # A tibble: 27 x 2
    path                                             data             
    <chr>                                            <list>           
@@ -28,7 +28,7 @@
 10 iris/Species=versicolor/iris-Petal.Width=1.3.csv <tibble [13 x 3]>
 # ... with 17 more rows
 
-> iris %>% slice(0) %>% build_shard_spec("iris", "csv", shard_by = c(Species,
+> iris %>% slice(0) %>% shard_split("iris", "csv", shard_by = c(Species,
 +   Petal.Width))
 # A tibble: 1 x 2
   path                                data            

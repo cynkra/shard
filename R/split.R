@@ -1,5 +1,5 @@
 #' @export
-build_shard_spec <- function(x, name, extension, ...,
+shard_split <- function(x, name, extension, ...,
                              shard_by = NULL, delimiter = "-") {
   ellipsis::check_dots_empty()
 
