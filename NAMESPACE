@@ -2,8 +2,10 @@
 
 export(shard_bind)
 export(shard_read_csv)
+export(shard_read_tsv)
 export(shard_split)
 export(shard_write_csv)
+export(shard_write_tsv)
 import(dplyr)
 import(rlang)
 import(tibble)

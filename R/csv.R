@@ -6,8 +6,12 @@ shard_write_csv <- function(x, name, dir = ".", ..., shard_by = NULL, delimiter 
 }
 
 write_csv_split <- function(split, ...) {
+  write_split(split, function(data, path) readr::write_csv(data, path, ...))
+}
+
+write_split <- function(split, writer) {
   fs::dir_create(unique(dirname(split$path)))
-  pwalk(split, function(data, path) readr::write_csv(data, path, ...))
+  pwalk(split, writer)
 }
 
 #' @export
