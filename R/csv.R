@@ -9,11 +9,6 @@ write_csv_split <- function(split, ...) {
   write_split(split, function(data, path) readr::write_csv(data, path, ...))
 }
 
-write_split <- function(split, writer) {
-  fs::dir_create(unique(dirname(split$path)))
-  pwalk(split, writer)
-}
-
 #' @export
 shard_read_csv <- function(name, dir = ".", ..., delimiter = "-") {
   # FIXME: Add spec = NULL argument, call readr::spec_csv() once if unset

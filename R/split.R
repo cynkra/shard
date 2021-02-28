@@ -58,3 +58,8 @@ na_as_empty <- function(x) {
   x[is.na(x)] <- ""
   x
 }
+
+write_split <- function(split, writer) {
+  fs::dir_create(unique(dirname(split$path)))
+  pwalk(split, writer)
+}
