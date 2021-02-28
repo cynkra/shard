@@ -3,7 +3,13 @@ shard_write_csv <- function(x, name, dir = ".", ..., shard_by = NULL, delimiter 
   check_dots_empty()
 
   split <- shard_split(x, name, "csv", shard_by = !!enexpr(shard_by), delimiter = delimiter)
-  split$path <- file.path(dir, split$path)
+  split$path <- fs::path(dir, split$path)
+
+  target_dir <- fs::path(dir, name)
+  if (fs::dir_exists(target_dir)) {
+    fs::dir_delete(target_dir)
+  }
+
   write_csv_split(split, ..., na = na)
 }
 
