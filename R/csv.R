@@ -1,5 +1,7 @@
 #' @export
 shard_write_csv <- function(x, name, dir = ".", ..., shard_by = NULL, delimiter = "-", na = "") {
+  check_dots_empty()
+
   split <- shard_split(x, name, "csv", shard_by = !!enexpr(shard_by), delimiter = delimiter)
   split$path <- file.path(dir, split$path)
   write_csv_split(split, ..., na = na)

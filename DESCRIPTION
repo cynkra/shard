@@ -17,9 +17,14 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 Imports: 
+    dplyr,
+    ellipsis,
     lifecycle,
-    tibble (>= 3.0.0)
+    purrr,
+    rlang,
+    tibble (>= 3.0.0),
+    tidyr
 RdMacros: lifecycle
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1.9001
 Suggests: 
     testthat
