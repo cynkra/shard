@@ -18,10 +18,25 @@ write_tsv_split <- function(split, ...) {
 }
 
 #' @export
-shard_read_tsv <- function(name, dir = ".", ..., delimiter = "-", col_names = NULL, col_types = NULL, skip = NULL) {
+shard_read_tsv <- function(name, dir = ".", ..., delimiter = "-",
+                           col_names = NULL, col_types = NULL, skip = NULL) {
   stopifnot(is.null(skip))
 
-  path <- fs::dir_ls(fs::path_abs(name, start = dir), glob = "*.tsv", recurse = TRUE, type = c("file", "symlink"))
+  info <-
+    fs::dir_info(
+      fs::path_abs(name, start = dir),
+      glob = "*.tsv",
+      recurse = TRUE,
+      type = c("file", "symlink")
+    ) %>%
+    info_for_cache()
+
+  shard_read_tsv_from_info(info, dir, delimiter, col_names, col_types, ...)
+}
+
+shard_read_tsv_from_info <- function(info, dir, delimiter, col_names, col_types,
+                                     ...) {
+  path <- info$path
 
   if (length(path) == 0) {
     return(tibble())
@@ -36,7 +51,11 @@ shard_read_tsv <- function(name, dir = ".", ..., delimiter = "-", col_names = NU
     col_names <- names(col_types$cols)
   }
 
-  data <- map(path, readr::read_tsv, ..., col_names = col_names, col_types = col_types, skip = 1L)
+  data <- map(path, read_tsv_cache, ..., col_names = col_names, col_types = col_types, skip = 1L)
   split <- tibble(path = fs::path_rel(path, dir), data)
   shard_bind(split, delimiter = delimiter)
+}
+
+read_tsv_cache <- function(file, ...) {
+  readr::read_tsv(file, ...)
 }

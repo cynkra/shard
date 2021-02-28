@@ -20,6 +20,7 @@ Imports:
     dplyr,
     ellipsis,
     lifecycle,
+    memoise,
     purrr,
     rlang,
     tibble (>= 3.0.0),
