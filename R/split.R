@@ -1,6 +1,6 @@
 #' @export
 shard_split <- function(x, name, extension, ...,
-                             shard_by = NULL, delimiter = "-") {
+                        shard_by = NULL, delimiter = "-") {
   ellipsis::check_dots_empty()
 
   shard_by <- tidyselect::eval_select(enquo(shard_by), x)
