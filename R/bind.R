@@ -50,7 +50,7 @@ shard_bind <- function(x, ..., delimiter = "-") {
 
   paths %>%
     transmute(!!!cols, data) %>%
-    unnest(data)
+    unnest(., data, ptype = tibble(data = .$data[[1]]))
 }
 
 all_same <- function(x) {
