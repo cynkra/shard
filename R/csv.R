@@ -56,6 +56,6 @@ shard_read_csv_from_info <- function(info, dir, delimiter, col_names, col_types,
   shard_bind(split, delimiter = delimiter)
 }
 
-read_csv_cache <- function(file, ...) {
+read_csv_cache <- function(file, ..., .info = info_for_cache(fs::file_info(file))) {
   readr::read_csv(file, ...)
 }

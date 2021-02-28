@@ -7,10 +7,10 @@
   }
 
   shard_read_csv_from_info <<- memoise::memoise(shard_read_csv_from_info)
-  read_csv_cache <<- memoise::memoise(read_csv_cache, ~ info_for_cache(fs::file_info(path)))
+  read_csv_cache <<- memoise::memoise(read_csv_cache)
 
   shard_read_tsv_from_info <<- memoise::memoise(shard_read_tsv_from_info)
-  read_tsv_cache <<- memoise::memoise(read_tsv_cache, ~ info_for_cache(fs::file_info(path)))
+  read_tsv_cache <<- memoise::memoise(read_tsv_cache)
 }
 
 activate_debugme <- function(level = 2) {
