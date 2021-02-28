@@ -21,7 +21,8 @@ write_csv_split <- function(split, ...) {
 shard_read_csv <- function(name, dir = ".", ..., delimiter = "-", col_names = NULL, col_types = NULL, skip = NULL) {
   stopifnot(is.null(skip))
 
-  path <- fs::dir_ls(fs::path_abs(name, start = dir), glob = "*.csv", recurse = TRUE, type = c("file", "symlink"))
+  info <- fs::dir_info(fs::path_abs(name, start = dir), glob = "*.csv", recurse = TRUE, type = c("file", "symlink"))
+  path <- info$path
 
   if (length(path) == 0) {
     return(tibble())
