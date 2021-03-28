@@ -16,6 +16,7 @@ shard_split_flat <- function(x, name, shard_by_in, delimiter) {
   }
 
   shard_by <- tidyselect::eval_select(shard_by_quo, x)
+  shard_by_syms <- syms(names(shard_by))
 
   # Prepend artificial row full of NAs to avoid corner cases
   if (nrow(x) == 0) {
@@ -44,14 +45,14 @@ shard_split_flat <- function(x, name, shard_by_in, delimiter) {
   nested <-
     x %>%
     nest(data = -!!shard_by) %>%
-    select(!!!syms(names(shard_by)), data) %>%
-    arrange(!!!syms(names(shard_by))) %>%
+    select(!!!shard_by_syms, data) %>%
+    arrange(!!!shard_by_syms) %>%
     mutate(!!!chars)
 
-  all_chars <- quo(paste(!!!syms(names(shard_by)), sep = "/"))
+  all_chars <- quo(paste(!!!shard_by_syms, sep = "/"))
   flat <-
     nested %>%
-    unite(path, !!!syms(names(shard_by)), sep = "/")
+    unite(path, !!!shard_by_syms, sep = "/")
 
   if (extra_row) {
     flat$data[[1]] <- flat$data[[1]][0, ]
