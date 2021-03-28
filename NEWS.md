@@ -1,3 +1,10 @@
+<!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
+
+# shard 0.0.0.9003 (2021-03-28)
+
+- Breaking: All shards contain all columns.
+
+
 # shard 0.0.0.9002 (2021-02-28)
 
 - Use memoise for caching.
