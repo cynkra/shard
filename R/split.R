@@ -3,7 +3,20 @@ shard_split <- function(x, name, extension, ...,
                         shard_by = NULL, delimiter = "-") {
   ellipsis::check_dots_empty()
 
-  shard_by <- tidyselect::eval_select(enquo(shard_by), x)
+  shard_split_flat(x, name, {{ shard_by }}, delimiter) %>%
+    mutate(path = paste0(!!name, "/", path, ".", !!extension))
+}
+
+shard_split_flat <- function(x, name, shard_by_in, delimiter) {
+  shard_by_quo <- enquo(shard_by_in)
+
+  if (quo_is_null(shard_by_quo)) {
+    flat <- tibble(path = !!name, data = list(as_tibble(x)))
+    return(flat)
+  }
+
+  shard_by <- tidyselect::eval_select(shard_by_quo, x)
+  shard_by_syms <- syms(names(shard_by))
 
   # Prepend artificial row full of NAs to avoid corner cases
   if (nrow(x) == 0) {
@@ -29,28 +42,27 @@ shard_split <- function(x, name, extension, ...,
     new_shard_quo
   )
 
-  nested <-
+  grouped <-
     x %>%
-    nest(data = -!!shard_by) %>%
-    select(!!!syms(names(shard_by)), data) %>%
-    arrange(!!!syms(names(shard_by))) %>%
+    group_by(!!!shard_by_syms)
+
+  nested <-
+    bind_cols(group_keys(grouped), tibble(data = group_split(grouped))) %>%
+    remove_rownames() %>%
+    select(!!!shard_by_syms, data) %>%
+    arrange(!!!shard_by_syms) %>%
     mutate(!!!chars)
 
-  if (length(nested) <= 1) {
-    flat <- tibble::tibble(path = !!name, nested)
-  } else {
-    all_chars <- quo(paste(!!!syms(names(shard_by)), sep = "/"))
-    flat <-
-      nested %>%
-      unite(path, !!!syms(names(shard_by)), sep = "/")
-  }
+  all_chars <- quo(paste(!!!shard_by_syms, sep = "/"))
+  flat <-
+    nested %>%
+    unite(path, !!!shard_by_syms, sep = "/")
 
   if (extra_row) {
     flat$data[[1]] <- flat$data[[1]][0, ]
   }
 
-  flat %>%
-    mutate(path = paste0(name, "/", path, ".", extension))
+  flat
 }
 
 na_as_empty <- function(x) {

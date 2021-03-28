@@ -6,32 +6,32 @@
 
 > iris %>% shard_split("iris", "csv", shard_by = Species)
 # A tibble: 3 x 2
-  path                             data             
-  <chr>                            <list>           
-1 iris/iris-Species=setosa.csv     <tibble [50 x 4]>
-2 iris/iris-Species=versicolor.csv <tibble [50 x 4]>
-3 iris/iris-Species=virginica.csv  <tibble [50 x 4]>
+  path                                       data
+  <chr>                            <list<tibble>>
+1 iris/iris-Species=setosa.csv           [50 x 5]
+2 iris/iris-Species=versicolor.csv       [50 x 5]
+3 iris/iris-Species=virginica.csv        [50 x 5]
 
 > iris %>% shard_split("iris", "csv", shard_by = c(Species, Petal.Width))
 # A tibble: 27 x 2
-   path                                             data             
-   <chr>                                            <list>           
- 1 iris/Species=setosa/iris-Petal.Width=0.1.csv     <tibble [5 x 3]> 
- 2 iris/Species=setosa/iris-Petal.Width=0.2.csv     <tibble [29 x 3]>
- 3 iris/Species=setosa/iris-Petal.Width=0.3.csv     <tibble [7 x 3]> 
- 4 iris/Species=setosa/iris-Petal.Width=0.4.csv     <tibble [7 x 3]> 
- 5 iris/Species=setosa/iris-Petal.Width=0.5.csv     <tibble [1 x 3]> 
- 6 iris/Species=setosa/iris-Petal.Width=0.6.csv     <tibble [1 x 3]> 
- 7 iris/Species=versicolor/iris-Petal.Width=1.csv   <tibble [7 x 3]> 
- 8 iris/Species=versicolor/iris-Petal.Width=1.1.csv <tibble [3 x 3]> 
- 9 iris/Species=versicolor/iris-Petal.Width=1.2.csv <tibble [5 x 3]> 
-10 iris/Species=versicolor/iris-Petal.Width=1.3.csv <tibble [13 x 3]>
+   path                                                       data
+   <chr>                                            <list<tibble>>
+ 1 iris/Species=setosa/iris-Petal.Width=0.1.csv            [5 x 5]
+ 2 iris/Species=setosa/iris-Petal.Width=0.2.csv           [29 x 5]
+ 3 iris/Species=setosa/iris-Petal.Width=0.3.csv            [7 x 5]
+ 4 iris/Species=setosa/iris-Petal.Width=0.4.csv            [7 x 5]
+ 5 iris/Species=setosa/iris-Petal.Width=0.5.csv            [1 x 5]
+ 6 iris/Species=setosa/iris-Petal.Width=0.6.csv            [1 x 5]
+ 7 iris/Species=versicolor/iris-Petal.Width=1.csv          [7 x 5]
+ 8 iris/Species=versicolor/iris-Petal.Width=1.1.csv        [3 x 5]
+ 9 iris/Species=versicolor/iris-Petal.Width=1.2.csv        [5 x 5]
+10 iris/Species=versicolor/iris-Petal.Width=1.3.csv       [13 x 5]
 # ... with 17 more rows
 
 > iris %>% slice(0) %>% shard_split("iris", "csv", shard_by = c(Species,
 +   Petal.Width))
 # A tibble: 1 x 2
-  path                                data            
-  <chr>                               <list>          
-1 iris/Species=/iris-Petal.Width=.csv <tibble [0 x 3]>
+  path                                          data
+  <chr>                               <list<tibble>>
+1 iris/Species=/iris-Petal.Width=.csv        [0 x 5]
 
