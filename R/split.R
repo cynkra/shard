@@ -7,8 +7,10 @@ shard_split <- function(x, name, extension, ...,
     mutate(path = paste0(name, "/", path, ".", extension))
 }
 
-shard_split_flat <- function(x, name, shard_by, delimiter) {
-  shard_by <- tidyselect::eval_select(enquo(shard_by), x)
+shard_split_flat <- function(x, name, shard_by_in, delimiter) {
+  shard_by_quo <- enquo(shard_by_in)
+
+  shard_by <- tidyselect::eval_select(shard_by_quo, x)
 
   # Prepend artificial row full of NAs to avoid corner cases
   if (nrow(x) == 0) {
