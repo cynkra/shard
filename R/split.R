@@ -48,14 +48,10 @@ shard_split_flat <- function(x, name, shard_by_in, delimiter) {
     arrange(!!!syms(names(shard_by))) %>%
     mutate(!!!chars)
 
-  if (length(nested) <= 1) {
-    flat <- tibble::tibble(path = !!name, nested)
-  } else {
-    all_chars <- quo(paste(!!!syms(names(shard_by)), sep = "/"))
-    flat <-
-      nested %>%
-      unite(path, !!!syms(names(shard_by)), sep = "/")
-  }
+  all_chars <- quo(paste(!!!syms(names(shard_by)), sep = "/"))
+  flat <-
+    nested %>%
+    unite(path, !!!syms(names(shard_by)), sep = "/")
 
   if (extra_row) {
     flat$data[[1]] <- flat$data[[1]][0, ]
