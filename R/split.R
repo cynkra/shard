@@ -42,9 +42,13 @@ shard_split_flat <- function(x, name, shard_by_in, delimiter) {
     new_shard_quo
   )
 
-  nested <-
+  grouped <-
     x %>%
-    nest(data = -!!shard_by) %>%
+    group_by(!!!shard_by_syms)
+
+  nested <-
+    bind_cols(group_keys(grouped), tibble(data = group_split(grouped))) %>%
+    remove_rownames() %>%
     select(!!!shard_by_syms, data) %>%
     arrange(!!!shard_by_syms) %>%
     mutate(!!!chars)
