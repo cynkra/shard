@@ -4,11 +4,16 @@ shard_split <- function(x, name, extension, ...,
   ellipsis::check_dots_empty()
 
   shard_split_flat(x, name, {{ shard_by }}, delimiter) %>%
-    mutate(path = paste0(name, "/", path, ".", extension))
+    mutate(path = paste0(!!name, "/", path, ".", !!extension))
 }
 
 shard_split_flat <- function(x, name, shard_by_in, delimiter) {
   shard_by_quo <- enquo(shard_by_in)
+
+  if (quo_is_null(shard_by_quo)) {
+    flat <- tibble(path = !!name, data = list(as_tibble(x)))
+    return(flat)
+  }
 
   shard_by <- tidyselect::eval_select(shard_by_quo, x)
 
