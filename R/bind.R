@@ -1,8 +1,9 @@
 #' @export
-shard_bind <- function(x, ..., delimiter = "-") {
+shard_bind <- function(x, ..., delimiter = "-", version = 2L) {
   ellipsis::check_dots_empty()
 
-  if (legacy) {
+  stopifnot(is.integer(version), version > 0)
+  if (version < 2L) {
     return(shard_bind_legacy(x, delimiter))
   }
 
