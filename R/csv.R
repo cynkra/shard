@@ -19,7 +19,7 @@ write_csv_split <- function(split, ...) {
 
 #' @export
 shard_read_csv <- function(name, dir = ".", ..., delimiter = "-",
-                           col_names = NULL, col_types = NULL, skip = NULL) {
+                           col_names = NULL, col_types = NULL, skip = NULL, version = 2L) {
   stopifnot(is.null(skip))
 
   info <-
@@ -31,10 +31,10 @@ shard_read_csv <- function(name, dir = ".", ..., delimiter = "-",
     ) %>%
     info_for_cache()
 
-  shard_read_csv_from_info(info, dir, delimiter, col_names, col_types, ...)
+  shard_read_csv_from_info(info, dir, delimiter, version, col_names, col_types, ...)
 }
 
-shard_read_csv_from_info <- function(info, dir, delimiter, col_names, col_types,
+shard_read_csv_from_info <- function(info, dir, delimiter, version, col_names, col_types,
                                      ...) {
   path <- info$path
 
@@ -53,7 +53,7 @@ shard_read_csv_from_info <- function(info, dir, delimiter, col_names, col_types,
 
   data <- map(path, read_csv_cache, ..., col_names = col_names, col_types = col_types, skip = 1L)
   split <- tibble(path = fs::path_rel(path, dir), data)
-  shard_bind(split, delimiter = delimiter)
+  shard_bind(split, delimiter = delimiter, version = version)
 }
 
 read_csv_cache <- function(file, ..., .info = info_for_cache(fs::file_info(file))) {
