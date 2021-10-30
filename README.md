@@ -1,3 +1,6 @@
+**ARCHIVED**
+
+This is solved in a much better way with {arrow}.
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
