@@ -1,7 +1,5 @@
 #' @export
 shard_write_tsv <- function(x, name, dir = ".", ..., shard_by = NULL, delimiter = "-", na = "") {
-  check_dots_empty()
-
   split <- shard_split(x, name, "tsv", shard_by = !!enexpr(shard_by), delimiter = delimiter)
   split$path <- fs::path(dir, split$path)
 
