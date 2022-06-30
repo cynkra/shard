@@ -1,5 +1,12 @@
 <!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
 
+# shard 0.0.0.9004 (2022-07-01)
+
+## Features
+
+- Pass on dots in `shard_write_csv()` and `shard_write_tsv()`.
+
+
 # shard 0.0.0.9003 (2021-03-28)
 
 - Breaking: All shards contain all columns.
